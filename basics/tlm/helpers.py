@@ -69,6 +69,7 @@ palette = {
     },
 }
 
+
 def log_normalize(x):
     pos_log_x = np.log(1 + x)
     return pos_log_x / pos_log_x.sum()

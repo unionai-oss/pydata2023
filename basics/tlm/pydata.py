@@ -18,13 +18,13 @@ from .helpers import (
 
 
 @task(
-    requests=Resources(cpu="4", mem="4Gi"),
-    limits=Resources(cpu="4", mem="4Gi"),
+    requests=Resources(cpu="4", mem="8Gi"),
+    limits=Resources(cpu="4", mem="8Gi"),
     disable_deck=False,
 )
-def etl_sales_aggregatation(start_dt: datetime) -> pd.DataFrame:
-    """Generates fake sales data and aggregates it by year, month, id,
-    name and calculates sum of sales. Mimics an ETL job.
+def etl_sales_aggregation(start_dt: datetime) -> pd.DataFrame:
+    """Generates fake sales data and aggregates it by year, month, id, name and calculates sum of sales.
+    Mimics an ETL job.
 
     Args:
         start_dt (datetime): Start date for generating fake sales data
@@ -48,7 +48,9 @@ def etl_sales_aggregatation(start_dt: datetime) -> pd.DataFrame:
         df = pd.concat([df, sample_df], axis=0)
 
         # sleep so total time 100 days is close to 2 minutes
-        time.sleep(5 * 60 / 360)
+        # time.sleep(5 * 60 / 360)
+        if i % 50 == 0:
+            print(f"Iteration {i}")
 
         # make mem usage more realistic
         n = 1_000_000 if i % 3 == 0 else 100_000
@@ -83,8 +85,6 @@ def etl_sales_aggregatation(start_dt: datetime) -> pd.DataFrame:
 def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
     """Creates a simulated training dataset. Mimics a preprocessing step
 
-    Args:
-        df (pd.DataFrame): Sales data
     Returns:
         pd.DataFrame: Training data
     """
@@ -95,13 +95,15 @@ def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
     idx = np.argsort(coef)[::-1]
     columns = [f"x_{i}" for i in range(X.shape[1])]
 
+    # give columns meaningful names
     for i, sorted_i in enumerate(idx):
         if i < 20:
             columns[sorted_i] = FEATURES[i]
 
     df = pd.DataFrame(X, columns=columns)
     df["y"] = y
-    time.sleep(15)
+    print(df)
+    # time.sleep(15)
     return df
 
 
@@ -143,13 +145,13 @@ def model_training_xgboost(
 def forecasting_wf(start_dt: datetime):
     """A Demo sales forecasting model training workflow. It has
     two major steps: ETL and model training. Note
-        - etl_sales_aggregatation is slow on memory
+        - etl_sales_aggregation is slow on memory
         - model_training_xgboost is cpu bound until 15 cpus
 
     Args:
         start_dt (datetime): Start date for generating fake sales data
     """
-    sales_df = etl_sales_aggregatation(start_dt=start_dt)
+    sales_df = etl_sales_aggregation(start_dt=start_dt)
     train_df = etl_prep_features(df=sales_df)
 
     for cpu in [1, 4, 12, 15]:

@@ -5,3 +5,4 @@ altair
 flytekitplugins-polars
 flytekitplugins-papermill
 Pillow
+scikit-learn

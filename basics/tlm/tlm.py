@@ -18,8 +18,8 @@ from .helpers import (
 
 
 @task(
-    requests=Resources(cpu="4", mem="8Gi"),
-    limits=Resources(cpu="4", mem="8Gi"),
+    requests=Resources(cpu="4", mem="4Gi"),
+    limits=Resources(cpu="4", mem="4Gi"),
     disable_deck=False,
 )
 def etl_sales_aggregatation(start_dt: datetime) -> pd.DataFrame:

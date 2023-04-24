@@ -80,8 +80,7 @@ def get_remote_source(ff: FlyteFile) -> str:
 
 @workflow
 def report_preprocessing(images: List[IMG]) -> str:
-    """A workflow that preprocesses images for the quality report. This
-    could be simplified from flytekit"""
+    """A workflow that preprocesses images for the quality report."""
     ff = images_to_df(images=images)
     source = get_remote_source(ff=ff)
     return source
@@ -112,3 +111,7 @@ def wf() -> Tuple[PythonNotebook, HTMLPage]:
     path = report_preprocessing(images=images)
     out, render = quality_report(path=path)
     return out, render
+
+
+if __name__ == "__main__":
+    wf()

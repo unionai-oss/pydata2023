@@ -32,6 +32,7 @@ class ImageRenderer:
         img_base64 = base64.b64encode(buffered.getvalue()).decode()
         return f'<img src="data:image/png;base64,{img_base64}" alt="Rendered Image" />'
 
+
 class FancyGrid:
     def to_html(self, html_elements: List[str]) -> str:
         grid_items = "\n".join([f'<div class="grid-item">{element}</div>' for element in html_elements])

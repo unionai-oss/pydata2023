@@ -1,6 +1,5 @@
 import os
 import random
-import tempfile
 from dataclasses import asdict, dataclass
 from typing import List, Tuple
 
@@ -62,28 +61,25 @@ def display_grid(images: List[IMG]):
 
 
 @task
-def images_to_df(images: List[IMG]) -> FlyteFile:
+def images_to_df(images: List[IMG]) -> StructuredDataset:
     """Converts a list of images to a dataframe and saves it to a parquet file"""
     df = pd.DataFrame(
-        [{**asdict(img), "remote_source": img.file.remote_source} for img in images]
+        [{**asdict(img), "remote_source": img.file.remote_source or img.file.path} for img in images]
     )
-    tmp = tempfile.mktemp()
-    df.to_parquet(tmp)
-    return FlyteFile(path=tmp)
+    return StructuredDataset(df)
 
 
 @task
-def get_remote_source(ff: FlyteFile) -> str:
-    """Returns the remote source of a FlyteFile"""
-    return ff.remote_source or ff.path  # local paths don't
+def get_remote_source(ff: StructuredDataset) -> str:
+    """This isn't really needed, papermill is struggling to decipher dataframes"""
+    return ff._literal_sd.uri
 
 
 @dynamic
 def report_preprocessing(images: List[IMG]) -> str:
     """A workflow that preprocesses images for the quality report."""
-    ff = images_to_df(images=images)
-    source = get_remote_source(ff=ff)
-    return source
+    df = images_to_df(images=images)
+    return get_remote_source(ff=df)
 
 
 quality_report = NotebookTask(
@@ -108,10 +104,11 @@ def wf() -> Tuple[PythonNotebook, HTMLPage]:
     ]
     display_grid(images=images)
 
-    path = report_preprocessing(images=images)
-    out, render = quality_report(path=path)
+    df = report_preprocessing(images=images)
+    out, render = quality_report(path=df)
     return out, render
 
 
 if __name__ == "__main__":
-    wf()
+    results = wf()
+    print(results)

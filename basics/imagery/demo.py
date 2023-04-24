@@ -75,10 +75,10 @@ def images_to_df(images: List[IMG]) -> FlyteFile:
 @task
 def get_remote_source(ff: FlyteFile) -> str:
     """Returns the remote source of a FlyteFile"""
-    return ff.remote_source
+    return ff.remote_source or ff.path  # local paths don't
 
 
-@workflow
+@dynamic
 def report_preprocessing(images: List[IMG]) -> str:
     """A workflow that preprocesses images for the quality report."""
     ff = images_to_df(images=images)

@@ -1,5 +1,4 @@
 import random
-import time
 from datetime import datetime, timedelta
 
 import numpy as np
@@ -47,8 +46,6 @@ def etl_sales_aggregation(start_dt: datetime) -> pd.DataFrame:
         sample_df["date"] = current_date
         df = pd.concat([df, sample_df], axis=0)
 
-        # sleep so total time 100 days is close to 2 minutes
-        # time.sleep(5 * 60 / 360)
         if i % 50 == 0:
             print(f"Iteration {i}")
 
@@ -103,7 +100,6 @@ def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
     df = pd.DataFrame(X, columns=columns)
     df["y"] = y
     print(df)
-    time.sleep(15)
     return df
 
 

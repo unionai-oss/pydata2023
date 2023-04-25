@@ -103,7 +103,7 @@ def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
     df = pd.DataFrame(X, columns=columns)
     df["y"] = y
     print(df)
-    # time.sleep(15)
+    time.sleep(15)
     return df
 
 

@@ -129,7 +129,6 @@ def to_html(self, html_elements: typing.List[str]) -> str:
     '''
 
 
-
 def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
     """Creates a simulated training dataset. Mimics a preprocessing step
 
@@ -184,6 +183,10 @@ def run_and_save_model(parquet_file: str):
     ...
 
 
+def run_training_steps():
+    ...
+
+
 parser = argparse.ArgumentParser(
     prog='RunXGB',
     description='download parquet file and run xgb/or upload')
@@ -194,16 +197,19 @@ parser.add_argument('-d', '--max_depth')  # depth to run on regressor
 
 
 def upload_local(parquet: Path) -> str:
-    prefix = uuid.uuid4().hex[:10] + f"/{parquet.name}"
-    return upload_file_to_s3(str(parquet), "my-s3-bucket", prefix)
+    prefix = "uploads/" + uuid.uuid4().hex[:10] + f"/{parquet.name}"
+    dest = upload_file_to_s3(str(parquet), "my-s3-bucket", prefix)
+    print(f"Uploaded local file {parquet} to {dest}")
+    return dest
 
 
 if __name__ == "__main__":
     """
     To run on server, run with:
-    python boilerplate/manual_xgb.py s3://blah -n 100 -j "-1" -d 6
+        python boilerplate/manual_xgb.py s3://blah -n 100 -j "-1" -d 6
     To upload local file and return s3 location
-    python boilerplate/manual_xgb.py /path/to/local/parquet
+        python boilerplate/manual_xgb.py /path/to/local/parquet
+        >> s3://my-s3-bucket/uploads/5c3c5f8a7c/sample_data.parquet
     """
     args = parser.parse_args()
     parquet = str(args.parquet_location)
@@ -218,4 +224,4 @@ if __name__ == "__main__":
     depth = int(args.max_depth)
 
     print(f"Running on {parquet} with {estimators} {jobs} {depth}")
-    # run_training_steps()
+    run_training_steps()

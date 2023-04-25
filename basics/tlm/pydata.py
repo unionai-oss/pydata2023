@@ -152,9 +152,9 @@ def forecasting_wf(start_dt: datetime):
 
     for cpu in [1, 4, 12, 15]:
         model_training_xgboost(
-            df=train_df, n_estimators=100, n_jobs=-1, max_depth=6
+            df=train_df, n_estimators=100, n_jobs=min(cpu, 12), max_depth=6
         ).with_overrides(
-            requests=Resources(cpu=str(cpu), mem="8Gi"),
-            limits=Resources(cpu=str(cpu), mem="8Gi"),
+            requests=Resources(cpu=str(cpu), mem="6Gi"),
+            limits=Resources(cpu=str(cpu), mem="6Gi"),
             name=f"model_training_xgboost_cpu_{cpu}",
         )

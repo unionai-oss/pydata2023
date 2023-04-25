@@ -93,7 +93,7 @@ quality_report = NotebookTask(
 
 
 @workflow
-def wf() -> Tuple[PythonNotebook, HTMLPage]:
+def pydata_images() -> Tuple[PythonNotebook, HTMLPage]:
     """A demo workflow that "scores images" and displays them
     in Flyte Decks and in a Jupyter Notebooks.
     """

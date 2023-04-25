@@ -1,0 +1,8 @@
+flytekit>=1.5.0
+xgboost
+plotly
+altair
+flytekitplugins-polars
+flytekitplugins-papermill
+Pillow
+scikit-learn

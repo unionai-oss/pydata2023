@@ -1,0 +1,15 @@
+python_version: 3.11
+packages:
+  - "flytekitplugins-papermill==1.6.0a1"
+  - "flytekitplugins-polars==1.6.0a1"
+  - "flytekit==1.6.0a1"
+  - xgboost
+  - wheel
+  - plotly
+  - altair
+  - Pillow
+  - scikit-learn
+apt_packages:
+  - "build-essential"
+registry: ghcr.io/unionai-oss
+name: pydata-xgb

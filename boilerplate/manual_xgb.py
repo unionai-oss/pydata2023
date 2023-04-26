@@ -20,12 +20,18 @@ from tlm.helpers import (
 
 
 def get_s3_client():
-    s3_client = boto3.client("s3", aws_access_key_id="minio",
-                             aws_secret_access_key="miniostorage", endpoint_url="http://localhost:30002")
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id="minio",
+        aws_secret_access_key="miniostorage",
+        endpoint_url="http://localhost:30002",
+    )
     return s3_client
 
 
-def upload_file_to_s3(file_path: str, remote_bucket: str, prefix_destination: str) -> str:
+def upload_file_to_s3(
+    file_path: str, remote_bucket: str, prefix_destination: str
+) -> str:
     c = get_s3_client()
     c.upload_file(file_path, remote_bucket, prefix_destination)
     return f"s3://{remote_bucket}/{prefix_destination}"
@@ -40,7 +46,8 @@ def upload_dataframe(df: pd.DataFrame):
 def download_files(s3_client, bucket_name, prefix, local_path):
     local_path = Path(local_path)
     local_path.mkdir(parents=True, exist_ok=True)
-    ll = s3_client.list_objects(Bucket=bucket_name,
+    ll = s3_client.list_objects(
+        Bucket=bucket_name,
         Prefix=prefix,
     )
 
@@ -49,7 +56,7 @@ def download_files(s3_client, bucket_name, prefix, local_path):
     all_keys = [x["Key"] for x in ll["Contents"]]
     for k in all_keys:
         folders = k.split("/")
-        new_file = local_path.joinpath(os.path.join(*folders[len(prefix_parts):]))
+        new_file = local_path.joinpath(os.path.join(*folders[len(prefix_parts) :]))
         new_file.parent.mkdir(parents=True, exist_ok=True)
         print(f"Downloading {bucket_name}/{k} to {str(new_file)}")
         s3_client.download_file(bucket_name, k, str(new_file))
@@ -62,24 +69,24 @@ def analyze_spark(sdf: sparkDF):
 
 def analyze_with_spark(df: pd.DataFrame):
     from pyspark.sql import SparkSession
-    session = SparkSession.builder \
-        .master("local[1]") \
-        .appName("pydatademo") \
-        .getOrCreate()
+
+    session = (
+        SparkSession.builder.master("local[1]").appName("pydatademo").getOrCreate()
+    )
     sdf = session.createDataFrame(df)
     ...
 
 
 def download_file_from_s3(s3_path):
     # Extract the bucket and key from the S3 path
-    match = re.match(r's3://([^/]+)/(.+)', s3_path)
+    match = re.match(r"s3://([^/]+)/(.+)", s3_path)
     if not match:
         raise ValueError(f"Invalid S3 path: {s3_path}")
 
     bucket, key = match.groups()
 
     # Create a boto3 client for S3
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client("s3")
 
     # Download the file
     tmp = tempfile.mktemp()
@@ -88,8 +95,10 @@ def download_file_from_s3(s3_path):
 
 
 def to_html(self, html_elements: typing.List[str]) -> str:
-    grid_items = "\n".join([f'<div class="grid-item">{element}</div>' for element in html_elements])
-    return f'''
+    grid_items = "\n".join(
+        [f'<div class="grid-item">{element}</div>' for element in html_elements]
+    )
+    return f"""
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -126,7 +135,7 @@ def to_html(self, html_elements: typing.List[str]) -> str:
         </div>
     </body>
     </html>
-    '''
+    """
 
 
 def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -155,7 +164,7 @@ def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def model_training_xgboost(
-        df: pd.DataFrame, n_estimators: int, n_jobs: int, max_depth: int
+    df: pd.DataFrame, n_estimators: int, n_jobs: int, max_depth: int
 ):
     model = XGBRegressor(
         n_estimators=n_estimators, n_jobs=n_jobs, verbosity=1, max_depth=max_depth
@@ -188,12 +197,14 @@ def run_training_steps():
 
 
 parser = argparse.ArgumentParser(
-    prog='RunXGB',
-    description='download parquet file and run xgb/or upload')
+    prog="RunXGB", description="download parquet file and run xgb/or upload"
+)
 parser.add_argument("parquet_location")
-parser.add_argument('-n', '--estimators')  # option that takes an integer number of estimators
-parser.add_argument('-j', '--jobs')  # number of jobs
-parser.add_argument('-d', '--max_depth')  # depth to run on regressor
+parser.add_argument(
+    "-n", "--estimators"
+)  # option that takes an integer number of estimators
+parser.add_argument("-j", "--jobs")  # number of jobs
+parser.add_argument("-d", "--max_depth")  # depth to run on regressor
 
 
 def upload_local(parquet: Path) -> str:

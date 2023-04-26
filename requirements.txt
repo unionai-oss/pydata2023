@@ -80,6 +80,7 @@ click==8.1.3
     #   cookiecutter
     #   flytekit
     #   papermill
+    #   rich-click
 cloudpickle==2.2.1
     # via flytekit
 comm==0.1.3
@@ -120,17 +121,22 @@ entrypoints==0.4
     # via
     #   altair
     #   papermill
+envd==0.3.19
+    # via flytekitplugins-envd
 executing==1.2.0
     # via stack-data
 fastjsonschema==2.16.3
     # via nbformat
 flyteidl==1.3.19
     # via flytekit
-flytekit==1.5.0
+flytekit==1.6.0a1
     # via
     #   -r requirements.in
+    #   flytekitplugins-envd
     #   flytekitplugins-papermill
     #   flytekitplugins-polars
+flytekitplugins-envd==1.6.0b0
+    # via -r requirements.in
 flytekitplugins-papermill==1.5.0
     # via -r requirements.in
 flytekitplugins-polars==1.5.0
@@ -238,6 +244,8 @@ keyring==23.13.1
     # via flytekit
 kubernetes==26.1.0
     # via flytekit
+markdown-it-py==2.2.0
+    # via rich
 markupsafe==2.1.2
     # via
     #   jinja2
@@ -255,6 +263,8 @@ matplotlib-inline==0.1.6
     # via
     #   ipykernel
     #   ipython
+mdurl==0.1.2
+    # via markdown-it-py
 mistune==2.0.5
     # via nbconvert
 more-itertools==9.1.0
@@ -359,6 +369,7 @@ pygments==2.15.1
     # via
     #   ipython
     #   nbconvert
+    #   rich
 pyjwt[crypto]==2.6.0
     # via
     #   adal
@@ -421,6 +432,12 @@ requests-oauthlib==1.3.1
     #   google-auth-oauthlib
     #   kubernetes
 responses==0.23.1
+    # via flytekit
+rich==13.3.4
+    # via
+    #   flytekit
+    #   rich-click
+rich-click==1.6.1
     # via flytekit
 rsa==4.9
     # via google-auth
@@ -512,7 +529,9 @@ websocket-client==1.5.1
     #   docker
     #   kubernetes
 wheel==0.40.0
-    # via flytekit
+    # via
+    #   -r requirements.in
+    #   flytekit
 wrapt==1.15.0
     # via
     #   aiobotocore

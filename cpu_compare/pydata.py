@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 import pytz
-from flytekit import Resources, WorkflowFailurePolicy, task, workflow, Deck
+from flytekit import Resources, task, workflow, Deck
 from sklearn.datasets import make_regression
 from xgboost import XGBRegressor
 
@@ -17,6 +17,7 @@ from .helpers import (
 
 
 @task(
+    container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}",
     requests=Resources(cpu="4", mem="8Gi"),
     limits=Resources(cpu="4", mem="8Gi"),
     disable_deck=False,
@@ -78,7 +79,11 @@ def etl_sales_aggregation(start_dt: datetime) -> pd.DataFrame:
     return monthly_aggs_df
 
 
-@task(requests=Resources(cpu="2", mem="4Gi"), limits=Resources(cpu="2", mem="4Gi"))
+@task(
+    container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}",
+    requests=Resources(cpu="2", mem="4Gi"),
+    limits=Resources(cpu="2", mem="4Gi"),
+)
 def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
     """Creates a simulated training dataset. Mimics a preprocessing step
 
@@ -104,12 +109,13 @@ def etl_prep_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @task(
+    container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}",
     requests=Resources(cpu="15", mem="5Gi"),
     limits=Resources(cpu="15", mem="5Gi"),
     disable_deck=False,
 )
 def model_training_xgboost(
-        df: pd.DataFrame, n_estimators: int, n_jobs: int, max_depth: int
+    df: pd.DataFrame, n_estimators: int, n_jobs: int, max_depth: int
 ):
     """Trains a XGBoost model and displays feature importance.
 

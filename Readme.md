@@ -1,10 +1,9 @@
 # Pydata 2023 Flyte Examples
 
-These are a couple examples that demonstrate the basic use-cases of Flyte.
+These are some simple examples that demonstrate the basic use-cases of Flyte that were written for Pydata 2023.
 
 ## Setup
 Create a virtualenv and activate it. Then `pip install -r requirements.txt` as normal.
-
 
 ## Commands
 

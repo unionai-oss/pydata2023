@@ -9,6 +9,7 @@ packages:
   - altair
   - Pillow
   - scikit-learn
+  - matplotlib
 apt_packages:
   - "build-essential"
 registry: ghcr.io/unionai-oss

@@ -86,7 +86,7 @@ def images_to_df(images: List[IMG]) -> StructuredDataset:
 
 @task(container_image=pydata_demo_image)
 def get_remote_source(ff: StructuredDataset) -> str:
-    """This isn't really needed, papermill is struggling to decipher dataframes"""
+    """This isn't really needed, but this is a Papermill limitation"""
     return ff._literal_sd.uri
 
 

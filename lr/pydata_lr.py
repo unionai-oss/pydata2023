@@ -1,6 +1,5 @@
 import pandas as pd
 
-from sklearn.datasets import load_wine
 from sklearn.linear_model import LogisticRegression
 from flytekit import task, dynamic, workflow
 
@@ -38,7 +37,6 @@ class ImageRenderer:
         else:
             raise ValueError("Unsupported image source type")
 
-
     @staticmethod
     def _image_to_html_string(img: Image.Image) -> str:
         buffered = BytesIO()
@@ -47,7 +45,7 @@ class ImageRenderer:
         return f'<img src="data:image/png;base64,{img_base64}" alt="Rendered Image" />'
 
 
-@task(cache=True, cache_version="1.0")
+@task(container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}", cache=True, cache_version="1.0")
 def load_data() -> pd.DataFrame:
     """Get the dataset."""
     n_features = 40
@@ -60,17 +58,18 @@ def load_data() -> pd.DataFrame:
     df["target"] = y
     return df
 
-@task
+
+@task(container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}")
 def etl_preprocess_data(data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """A place holder that would exist IRL"""
     data["engineered"] = data["feature_1"]**2 + data["feature_2"]
 
     msk = np.random.rand(len(data)) < 0.8
 
-
     return data[msk], data[~msk]
 
-@task
+
+@task(container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}")
 def train_model(data: pd.DataFrame, hyperparameters: dict) -> LogisticRegression:
     """Train a model on the wine dataset."""
     features = data.drop("target", axis="columns")
@@ -94,7 +93,7 @@ def plot_roc_auc(roc_df) -> str:
     return str_io.getvalue()
 
 
-@task(disable_deck=False)
+@task(container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}", disable_deck=False)
 def validate_model(model: LogisticRegression, data: pd.DataFrame) -> float:
     """Validate the model on the wine dataset."""
     features = data.drop("target", axis="columns")
@@ -116,7 +115,7 @@ def validate_model(model: LogisticRegression, data: pd.DataFrame) -> float:
     return float(score)
 
 
-@task(disable_deck=False)
+@task(container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}", disable_deck=False)
 def performance_report(results: Dict[str, float]):
     sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     table = pd.DataFrame(sorted_results, columns=["Model Name", "Accuracy"])
@@ -124,7 +123,7 @@ def performance_report(results: Dict[str, float]):
     flytekit.Deck("Results", table.to_html())
 
 
-@dynamic
+@dynamic(container_image="{{.images.xgb.fqn}}:{{.images.xgb.version}}")
 def training_workflow(regularization: List[float]):
     """Put all of the steps together into a single workflow."""
     data = load_data()

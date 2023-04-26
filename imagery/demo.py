@@ -13,11 +13,16 @@ from PIL import Image
 
 from imagery.renderers import FancyGrid, ImageRenderer
 
-new_flytekit = "git+https://github.com/flyteorg/flytekit@8efcbc777283c909d31ab4cd4dde1c41dc3a759d"
-
-pydata_demo_image = ImageSpec(packages=[new_flytekit, "flytekitplugins-polars", "flytekitplugins-papermill"],
-                              apt_packages=["build-essential", "git"],
-                              registry="ghcr.io/unionai-oss", name="pydata2023")
+pydata_demo_image = ImageSpec(
+    packages=[
+        "flytekit==1.6.0a1",
+        "flytekitplugins-polars",
+        "flytekitplugins-papermill",
+    ],
+    apt_packages=["build-essential", "git"],
+    registry="ghcr.io/unionai-oss",
+    name="pydata2023",
+)
 
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -71,7 +76,10 @@ def display_grid(images: List[IMG]):
 def images_to_df(images: List[IMG]) -> StructuredDataset:
     """Converts a list of images to a dataframe and saves it to a parquet file"""
     df = pd.DataFrame(
-        [{**asdict(img), "remote_source": img.file.remote_source or img.file.path} for img in images]
+        [
+            {**asdict(img), "remote_source": img.file.remote_source or img.file.path}
+            for img in images
+        ]
     )
     return StructuredDataset(df)
 
@@ -118,5 +126,5 @@ def pydata_images() -> Tuple[PythonNotebook, HTMLPage]:
 
 
 if __name__ == "__main__":
-    results = wf()
+    results = pydata_images()
     print(results)

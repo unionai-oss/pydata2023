@@ -35,8 +35,10 @@ class ImageRenderer:
 
 class FancyGrid:
     def to_html(self, html_elements: List[str]) -> str:
-        grid_items = "\n".join([f'<div class="grid-item">{element}</div>' for element in html_elements])
-        return f'''
+        grid_items = "\n".join(
+            [f'<div class="grid-item">{element}</div>' for element in html_elements]
+        )
+        return f"""
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -73,6 +75,4 @@ class FancyGrid:
             </div>
         </body>
         </html>
-        '''
-
-
+        """

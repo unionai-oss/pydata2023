@@ -110,14 +110,18 @@ def bar_plot_html(x, y, title=None, x_label=None, y_label=None):
 
 
 def bar_plot_altair_html(data, x_label, y_label):
-
     # Bar plot
-    chart = alt.Chart(data).mark_bar(color="#D093F1").encode(
-        y=alt.Y(f'{y_label}:N', sort='-x'),
-        x=alt.X(f'{x_label}:Q'),
-    ).properties(width=600, height=500)
+    chart = (
+        alt.Chart(data)
+        .mark_bar(color="#D093F1")
+        .encode(
+            y=alt.Y(f"{y_label}:N", sort="-x"),
+            x=alt.X(f"{x_label}:Q"),
+        )
+        .properties(width=600, height=500)
+    )
 
     str_io = StringIO()
 
-    chart.save(str_io, format="html", embed_options={'renderer': 'svg'})
+    chart.save(str_io, format="html", embed_options={"renderer": "svg"})
     return str_io.getvalue()

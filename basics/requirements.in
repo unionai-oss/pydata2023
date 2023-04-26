@@ -1,7 +1,9 @@
 flytekit>=1.5.0
+wheel
 xgboost
 plotly
 altair
+flytekitplugins-envd
 flytekitplugins-polars
 flytekitplugins-papermill
 Pillow

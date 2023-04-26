@@ -1,0 +1,8 @@
+python_version: 3.11
+packages:
+  - "flytekitplugins-papermill==1.6.0b0"
+  - "flytekitplugins-polars==1.6.0b0"
+apt_packages:
+  - "build-essential"
+registry: ghcr.io/flyteorg
+name: flytecookbook

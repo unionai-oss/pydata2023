@@ -12,6 +12,6 @@ docker buildx build --file Dockerfile --build-arg VERSION=1.5.0 --platform linux
 
 run time
 cd basics
-pyflyte -c ~/.flyte/ucdemo.yaml register --image ghcr.io/flyteorg/flytecookbook:pydata_img_1 imagery/demo.py
+pyflyte -c ~/.flyte/ucdemo.yaml register --image ghcr.io/flyteorg/flytecookbook:pydata_2 imagery
 pyflyte -c ~/.flyte/ucdemo.yaml register --image ghcr.io/flyteorg/flytecookbook:pydata_2 tlm
 

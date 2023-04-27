@@ -30,6 +30,6 @@ pyflyte -c ~/.flyte/ucdemo.yaml register --image ghcr.io/flyteorg/flytecookbook:
 Flytekit also has recently released a beta feature to help with the image building process. This is the `ImageSpec` object declared in the `demo.py` file. This can also be declared via a file, which is what is used for the second example. 
 
 ```bash
-pyflyte -c ~/.flyte/ucdemo.yaml register --image xgb=xgb_img.yaml imagery cpu_compare
-pyflyte -c ~/.flyte/dev.yaml register --image xgb=xgb_img.yaml imagery cpu_compare
+pyflyte -c ~/.flyte/ucdemo.yaml register --image xgb=xgb_img.yaml imagery cpu_compare lr
+pyflyte -c ~/.flyte/dev.yaml register --image xgb=xgb_img.yaml imagery cpu_compare lr
 ```

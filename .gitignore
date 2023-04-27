@@ -13,3 +13,5 @@ venv3/
 build/
 .idea/
 .coverage
+.jukit/
+

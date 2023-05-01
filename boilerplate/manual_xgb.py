@@ -179,7 +179,7 @@ def model_training_xgboost(
     top_importance = importance_df.sort_values(by="importance", ascending=False).head(
         20
     )
-    # Write to
+    # Write to ...
 
 
 # Scenario: Have a local parquet file. Want to upload the file and train an xg regressor
